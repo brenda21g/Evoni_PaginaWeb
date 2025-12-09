@@ -4,87 +4,66 @@ namespace App\Http\Controllers;
 
 use App\Models\Guest;
 use App\Models\Evento;
-use App\Models\User; 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class GuestController extends Controller
 {
     public function index()
     {
-       
-        
-        $user = Auth::user(); 
-
-        if (!$user) {
-            $user = User::first();
-        }
-
-        if (!$user) {
-            $user = User::create([
-                'name' => 'Admin',
-                'email' => 'admin@evoni.com',
-                'password' => bcrypt('12345678')
-            ]);
-        }
-
-        Auth::login($user);
-
-    
-
-        $evento = $user->eventos()->first();
-
+        $userId = auth()->id() ?? 1;
+        $evento = Evento::where('user_id', $userId)->first();
         if (!$evento) {
-            $evento = Evento::create([
-                'user_id' => $user->id,
-                'nombre' => 'Mi Boda',
-                'fecha' => now(),
-                'hora' => '20:00',
-                'descripcion' => 'Evento Principal'
-            ]);
+            // redirigir a crear evento si no hay
+            return redirect()->route('eventos.create')->with('info','Crea tu primer evento antes de agregar invitados');
         }
-        
-        $guests = $evento->invitados()->orderBy('created_at', 'desc')->get();
 
-        return view('guests.index', compact('guests', 'evento'));
+        $guests = Guest::where('evento_id', $evento->id)->orderBy('created_at','desc')->get();
+        return view('guests.index', compact('guests','evento'));
     }
 
     public function create()
     {
-        return view('guests.create');
+        $eventos = Evento::all();
+        return view('guests.create', compact('eventos'));
     }
 
     public function store(Request $request)
     {
-        $request->validate(['nombre' => 'required']);
-
-        if (!Auth::check()) {
-            $user = User::first();
-            if ($user) Auth::login($user);
-        }
-
-        $evento = Auth::user()->eventos()->first();
-
-        Guest::create([
-            'evento_id' => $evento->id,
-            'nombre' => $request->nombre,
-            'telefono' => $request->telefono,
-            'grupo' => $request->grupo,
-            'mesa' => $request->mesa,
-            'menu' => $request->menu,
-            'nota' => $request->nota,
-            'genero' => $request->genero ?? 'Hombre',
-            'tipo' => $request->tipo ?? 'Adulto',
-            'estatus' => 'En espera'
+        $request->validate([
+            'evento_id' => 'required|exists:eventos,id',
+            'nombre' => 'required|string|max:255',
+            'telefono' => 'nullable',
+            'grupo' => 'nullable',
+            'mesa' => 'nullable',
+            'menu' => 'nullable',
+            'nota' => 'nullable',
+            'genero' => 'nullable',
+            'tipo' => 'nullable',
+            'estatus' => 'nullable',
         ]);
 
-        return redirect()->route('guests.index')->with('success', 'Invitado agregado');
+        Guest::create($request->all());
+        return redirect()->route('guests.index')->with('success','Invitado agregado');
+    }
+
+    public function edit($id)
+    {
+        $guest = Guest::findOrFail($id);
+        $eventos = Evento::all();
+        return view('guests.edit', compact('guest','eventos'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $guest = Guest::findOrFail($id);
+        $guest->update($request->all());
+        return redirect()->route('guests.index')->with('success','Invitado actualizado');
     }
 
     public function destroy($id)
     {
         $guest = Guest::findOrFail($id);
         $guest->delete();
-        return redirect()->route('guests.index')->with('success', 'Eliminado');
+        return redirect()->route('guests.index')->with('success','Invitado eliminado');
     }
 }

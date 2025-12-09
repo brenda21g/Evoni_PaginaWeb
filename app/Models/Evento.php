@@ -4,22 +4,31 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-namespace App\Models;
-use Illuminate\Database\Eloquent\Model;
-
 class Evento extends Model
 {
-    protected $fillable = ['user_id', 'nombre', 'fecha', 'hora', 'descripcion'];
+    protected $table = 'eventos';
 
-    // Relación Inversa: Evento es organizado por Usuario
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
+    protected $fillable = [
+        'user_id',
+        'nombre',
+        'fecha',
+        'hora',
+        'descripcion',
+        'imagen',
+    ];
 
-    // Relación: Evento "tiene" Invitados (Rombo azul del diagrama)
     public function invitados()
     {
         return $this->hasMany(Guest::class, 'evento_id');
+    }
+
+    public function tasks()
+    {
+        return $this->hasMany(Task::class, 'evento_id');
+    }
+
+    public function budgets()
+    {
+        return $this->hasMany(Budget::class, 'evento_id');
     }
 }
