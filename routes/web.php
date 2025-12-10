@@ -8,13 +8,13 @@ use App\Http\Controllers\TaskController;
 use App\Http\Controllers\BudgetController;
 use App\Http\Controllers\ProfileController;
 
-// Redirección por defecto
+// PÁGINA PÚBLICA DE INICIO
 Route::get('/', function () {
-    return redirect()->route('dashboard');
-});
+    return view('inicio');
+})->name('inicio');
 
-// Requiere autenticación
-
+// RUTAS QUE REQUIEREN AUTENTICACIÓN
+Route::middleware(['auth'])->group(function () {
 
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -40,9 +40,8 @@ Route::get('/', function () {
     // Perfil
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+});
 
-    //INICIO
-    Route::get('/', function () {
-    return view('inicio');
-})->name('inicio');
-
+// RUTAS DE AUTENTICACIÓN (login, register, etc.)
+// Asegúrate de que exista routes/auth.php (lo genera Breeze/Jetstream)
+require __DIR__.'/auth.php';
