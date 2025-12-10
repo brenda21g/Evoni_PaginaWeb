@@ -1,44 +1,63 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Editar evento</title>
-    <style>
-        body { background:#fff0f7; font-family: Arial; }
-        label { color:#ff7bbf; font-weight:bold; }
-        input, textarea { border-radius:10px; border:1px solid #ffb3d9; padding:8px; }
-        img { width:150px; border-radius:15px; margin-bottom:10px; }
-        .btn { background:#ff7bbf; color:white; padding:10px 20px; border:none; border-radius:10px; }
-    </style>
-</head>
-<body>
+@extends('layouts.app')
+@section('content')
+<h1 class="mb-4 text-2xl font-semibold text-gary-600">Editar Evento</h1>
 
-<h1 style="color:#ff7bbf;">Editar Evento</h1>
+<form action="{{ route('eventos.update', $evento->id) }}" 
+      method="POST" 
+      enctype="multipart/form-data" 
+      class="p-6 bg-white rounded shadow">
 
-<form action="{{ route('eventos.update', $evento->id) }}" method="POST" enctype="multipart/form-data">
     @csrf
     @method('PUT')
 
-    @if($evento->imagen)
-        <img src="{{ asset('storage/'.$evento->imagen) }}">
-    @endif
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
 
-    <label>Nueva imagen (opcional):</label><br>
-    <input type="file" name="imagen"><br><br>
+        <div>
+            <label class="block text-sm text-gray-700">Nombre</label>
+            <input name="nombre" 
+                   class="w-full px-3 py-2 border rounded"
+                   value="{{ old('nombre', $evento->nombre) }}">
+        </div>
 
-    <label>Nombre:</label><br>
-    <input type="text" name="nombre" value="{{ $evento->nombre }}"><br><br>
+        <div>
+            <label class="block text-sm text-gray-700">Fecha</label>
+            <input name="fecha" 
+                   type="date"
+                   class="w-full px-3 py-2 border rounded"
+                   value="{{ old('fecha', $evento->fecha) }}">
+        </div>
 
-    <label>Fecha:</label><br>
-    <input type="date" name="fecha" value="{{ $evento->fecha }}"><br><br>
+        <div>
+            <label class="block text-sm text-gray-700">Hora</label>
+            <input name="hora" 
+                   type="time"
+                   class="w-full px-3 py-2 border rounded"
+                   value="{{ old('hora', $evento->hora) }}">
+        </div>
 
-    <label>Hora:</label><br>
-    <input type="time" name="hora" value="{{ $evento->hora }}"><br><br>
+        <div>
+            <label class="block text-sm text-gray-700">Imagen</label>
+            <input name="imagen" type="file" class="w-full">
 
-    <label>Descripción:</label><br>
-    <textarea name="descripcion">{{ $evento->descripcion }}</textarea><br><br>
+            @if($evento->imagen)
+            <p class="mt-2 text-sm text-gray-600">Imagen actual:</p>
+            <img src="{{ asset('storage/' . $evento->imagen) }}" 
+                 class="object-cover w-32 h-32 mt-1 rounded">
+            @endif
+        </div>
 
-    <button class="btn">Actualizar</button>
+        <div class="md:col-span-2">
+            <label class="block text-sm text-gray-700">Descripción</label>
+            <textarea name="descripcion" 
+                      rows="4"
+                      class="w-full px-3 py-2 border rounded">{{ old('descripcion', $evento->descripcion) }}</textarea>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <button class="px-4 py-2 text-white bg-gray-700 rounded">Actualizar</button>
+        <a href="{{ route('eventos.index') }}" class="ml-2 text-gray-600">Cancelar</a>
+    </div>
+
 </form>
-
-</body>
-</html>
+@endsection

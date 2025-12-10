@@ -3,7 +3,7 @@
 @section('content')
 <div class="max-w-3xl p-8 mx-auto mt-10 bg-white rounded-lg shadow-md">
 
-    <h1 class="mb-6 text-2xl font-bold text-pink-600">Crear nueva tarea</h1>
+    <h1 class="mb-6 text-2xl font-bold text-gray-600">Crear nueva tarea</h1>
 
     <form action="{{ route('tasks.store') }}" method="POST">
         @csrf
@@ -23,7 +23,7 @@
             </label>
 
             <select name="evento_id" required 
-                class="w-full p-2 mt-1 border border-red-400 rounded">
+                class="w-full p-2 mt-1 border border-gray-400 rounded">
                 <option value="">-- Selecciona un evento --</option>
                 @foreach ($eventos as $evento)
                     <option value="{{ $evento->id }}">
@@ -58,7 +58,7 @@
                 Cancelar
             </a>
 
-            <button class="px-4 py-2 text-white bg-pink-600 rounded hover:bg-pink-700">
+            <button class="px-4 py-2 text-gray-700 bg-gray-400 rounded hover:bg-black">
                 Guardar tarea
             </button>
         </div>

@@ -1,8 +1,8 @@
 @extends('layouts.app')
 @section('content')
 <div class="flex items-center justify-between mb-4">
-  <h1 class="text-2xl font-semibold text-pink-600">Tareas</h1>
-  <a href="{{ route('tasks.create') }}" class="px-4 py-2 text-white bg-pink-600 rounded">Nueva tarea</a>
+  <h1 class="text-2xl font-semibold text-black">Tareas</h1>
+  <a href="{{ route('tasks.create') }}" class="px-4 py-2 text-white bg-gray-600 rounded">Nueva tarea</a>
 </div>
 
 <div class="grid gap-4 md:grid-cols-2">

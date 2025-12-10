@@ -20,7 +20,8 @@ return new class extends Migration
             $table->text('nota')->nullable();
             $table->enum('genero', ['Hombre', 'Mujer'])->default('Hombre');
             $table->enum('tipo', ['Adulto', 'Niño', 'Bebé'])->default('Adulto');
-            $table->enum('estatus', ['Confirmada', 'En espera', 'Rechazada'])->default('En espera');
+            $table->enum('estatus', ['En espera', 'Confirmado', 'Rechazado'])->default('En espera');
+
 
             $table->timestamps();
         });
