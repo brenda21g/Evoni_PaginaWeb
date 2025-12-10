@@ -45,12 +45,15 @@
 
             <!-- BOTÓN -->
             <a href="{{ route('login') }}"
-             class="px-6 py-2 text-sm font-bold text-black bg-white border border-black rounded-md hover:bg-black
-              hover:text-white transition">
+             class="px-6 py-2 text-sm font-bold text-black transition bg-white border border-black rounded-md hover:bg-black hover:text-white">
              INICIAR SESIÓN </a>
         </div>
     </header>
-
+<!-- MENÚ -->
+<nav class="space-x-8 text-sm font-semibold">
+    <a href="{{ route('register') }}" class="hover:text-yellow-400">INICIO</a>  <!-- Actualizamos para que apunte al registro -->
+    <a href="{{ route('register') }}" class="hover:text-yellow-400">CONTACTO</a>  <!-- Actualizamos para que apunte al registro -->
+</nav>
     <!-- HERO -->
 <section class="relative hero-bg">
 

@@ -10,22 +10,26 @@ class TaskController extends Controller
 {
     public function index()
     {
-        $tasks = Task::orderBy('created_at', 'desc')->get(); 
+        $tasks = Task::with('evento')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
         return view('tasks.index', compact('tasks'));
     }
 
     public function create()
     {
-        $eventos = Evento::orderBy('fecha', 'asc')->get();
+        $eventos = Evento::all();
         return view('tasks.create', compact('eventos'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'titulo' => 'required',
+            'titulo' => 'required|string|max:255',
             'evento_id' => 'required|exists:eventos,id',
             'fecha_limite' => 'nullable|date',
+            'descripcion' => 'nullable|string'
         ]);
 
         Task::create([
@@ -33,10 +37,11 @@ class TaskController extends Controller
             'evento_id' => $request->evento_id,
             'fecha_limite' => $request->fecha_limite,
             'descripcion' => $request->descripcion,
-            'user_id' => auth()->id() ?? 1
+            'estado' => 'pendiente'
         ]);
 
-        return redirect()->route('tasks.index')->with('success', 'Tarea creada correctamente');
+        return redirect()->route('tasks.index')
+            ->with('success', 'Tarea creada');
     }
 
     public function edit($id)
@@ -49,27 +54,40 @@ class TaskController extends Controller
 
     public function update(Request $request, $id)
     {
-        $task = Task::findOrFail($id);
-
         $request->validate([
-            'titulo' => 'required',
+            'titulo' => 'required|string|max:255',
             'evento_id' => 'required|exists:eventos,id',
             'fecha_limite' => 'nullable|date',
+            'descripcion' => 'nullable|string',
+            'estado' => 'required|in:pendiente,completada'
         ]);
 
-        $task->update([
-            'titulo' => $request->titulo,
-            'evento_id' => $request->evento_id,
-            'fecha_limite' => $request->fecha_limite,
-            'descripcion' => $request->descripcion,
-        ]);
+        $task = Task::findOrFail($id);
 
-        return redirect()->route('tasks.index')->with('success', 'Tarea actualizada');
+        $task->update($request->all());
+
+        return redirect()->route('tasks.index')
+            ->with('success', 'Tarea actualizada');
+    }
+
+    public function toggle($id)
+    {
+        $task = Task::findOrFail($id);
+
+        $task->estado = $task->estado === 'pendiente'
+            ? 'completada'
+            : 'pendiente';
+
+        $task->save();
+
+        return redirect()->route('tasks.index');
     }
 
     public function destroy($id)
     {
-        Task::destroy($id);
-        return redirect()->route('tasks.index')->with('success', 'Tarea eliminada');
+        Task::findOrFail($id)->delete();
+
+        return redirect()->route('tasks.index')
+            ->with('success', 'Tarea eliminada');
     }
 }

@@ -7,13 +7,17 @@ use App\Http\Controllers\GuestController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\BudgetController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Auth\RegisteredUserController;
 
-// PÁGINA PÚBLICA DE INICIO
+// Página pública
 Route::get('/', function () {
     return view('inicio');
 })->name('inicio');
+// Ruta para la página de registro
+Route::get('register', [RegisteredUserController::class, 'create'])->name('register');
+Route::post('register', [RegisteredUserController::class, 'store']);
 
-// RUTAS QUE REQUIEREN AUTENTICACIÓN
+// Rutas protegidas por autenticación
 Route::middleware(['auth'])->group(function () {
 
     // Dashboard
@@ -42,6 +46,5 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
 });
 
-// RUTAS DE AUTENTICACIÓN (login, register, etc.)
-// Asegúrate de que exista routes/auth.php (lo genera Breeze/Jetstream)
+// Rutas de Breeze (login, register, forgot-password, logout, etc.)
 require __DIR__.'/auth.php';
