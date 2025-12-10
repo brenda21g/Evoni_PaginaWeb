@@ -3,18 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Models\Evento;
-use Illuminate\Http\Request;
+use App\Models\Guest;
+use App\Models\Task;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        $userId = auth()->id() ?? 1;
-        $eventos = Evento::where('user_id', $userId)->orderBy('fecha','desc')->get();
-        // stats
-        $totalEventos = $eventos->count();
-        $proximos = $eventos->take(3);
-
-        return view('dashboard.index', compact('eventos','totalEventos','proximos'));
+        return view('dashboard', [
+            'total_eventos'   => Evento::count(),
+            'total_invitados' => Guest::count(),
+            'confirmados'     => Guest::where('estatus', 'Confirmado')->count(),
+            'pendientes'      => Guest::where('estatus', 'En espera')->count(),
+            'rechazados'      => Guest::where('estatus', 'Rechazado')->count(),
+            'total_tareas'    => Task::count(),
+            'tareas_done'     => Task::where('estado', 'completada')->count(),
+        ]);
     }
 }

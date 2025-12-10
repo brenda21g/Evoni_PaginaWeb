@@ -19,9 +19,9 @@
     </style>
 </head>
 
-<body class="bg-gray-100 text-gray-900">
+<body class="text-gray-900 bg-gray-100">
     <header class="bg-white border-b border-gray-300">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
 
                 <!-- LOGO -->
@@ -32,7 +32,7 @@
                         <span class="text-xl font-semibold tracking-wide text-black">EVONI</span>
                     </a>
                 </div>
-                <nav class="hidden md:flex items-center gap-6">
+                <nav class="items-center hidden gap-6 md:flex">
                     <a href="{{ route('dashboard') }}" class="nav-link">Inicio</a>
                     <a href="{{ route('eventos.index') }}" class="nav-link">Eventos</a>
                     <a href="{{ route('guests.index') }}" class="nav-link">Invitados</a>
@@ -52,16 +52,16 @@
 
  
     <main class="py-10">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
 
             @if(session('success'))
-                <div class="mb-4 p-4 bg-gray-200 text-gray-900 border-l-4 border-black">
+                <div class="p-4 mb-4 text-gray-900 bg-gray-200 border-l-4 border-black">
                     {{ session('success') }}
                 </div>
             @endif
 
             @if(session('info'))
-                <div class="mb-4 p-4 bg-gray-200 text-gray-900 border-l-4 border-gray-700">
+                <div class="p-4 mb-4 text-gray-900 bg-gray-200 border-l-4 border-gray-700">
                     {{ session('info') }}
                 </div>
             @endif
@@ -71,9 +71,9 @@
     </main>
 
     <!-- FOOTER -->
-    <footer class="bg-white border-t border-gray-300 py-6">
-        <div class="max-w-7xl mx-auto px-4 text-center text-gray-600 text-sm">
-            © {{ date('Y') }} EVONI — Minimal design
+    <footer class="py-6 bg-white border-t border-gray-300">
+        <div class="px-4 mx-auto text-sm text-center text-gray-600 max-w-7xl">
+            © {{ date('Y') }} EVONI — Todos los derechos reservados a LaMeraPolvoraDelCuete.
         </div>
     </footer>
 
