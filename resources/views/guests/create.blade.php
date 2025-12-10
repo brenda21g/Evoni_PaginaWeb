@@ -17,6 +17,16 @@
             <div class="space-y-6">
 
                 <div>
+                    <label class="block mb-1 font-semibold text-gray-700">Evento asociado</label>
+                    <select name="evento_id" required class="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg">
+                        <option value="">Seleccione un evento</option>
+                        @foreach($eventos as $e)
+                            <option value="{{ $e->id }}">{{ $e->titulo }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div>
                     <label class="block mb-1 font-semibold text-gray-700">Nombre</label>
                     <input type="text" name="nombre" required class="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg">
                 </div>

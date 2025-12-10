@@ -1,53 +1,64 @@
-<x-app-layout>
-    <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100">
-        <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
-            <!-- Texto "< BACK" arriba a la izquierda -->
-            <div class="mb-4">
-                <a href="{{ route('dashboard') }}" class="text-pink-600 hover:text-pink-800 font-semibold">< BACK</a>
-            </div>
+@extends('layouts.app')
 
-            <!-- Título centrado -->
-            <div class="text-center mb-6">
-                <h1 class="text-2xl font-bold text-gray-800">Configurar Cuenta</h1>
-            </div>
+@section('content')
+<div class="max-w-3xl p-10 mx-auto bg-white border border-gray-200 shadow-sm rounded-xl">
 
-            <!-- Imagen circular de avatar -->
-            <div class="flex justify-center mb-6">
-                <img class="w-20 h-20 rounded-full" src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name) }}&color=7F9CF5&background=EBF4FF" alt="Avatar">
-            </div>
+    <h1 class="mb-6 text-2xl font-semibold text-gray-900">Perfil de Usuario</h1>
 
-            <!-- Formulario -->
-            <form method="post" action="{{ route('profile.update') }}" class="space-y-4">
-                @csrf
-                @method('PUT')
-
-                <!-- Campo Nombre -->
-                <div>
-                    <x-input-label for="name" :value="__('Nombre')" />
-                    <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', auth()->user()->name)" required autofocus />
-                    <x-input-error :messages="$errors->get('name')" class="mt-2" />
-                </div>
-
-                <!-- Campo Usuario (Email) -->
-                <div>
-                    <x-input-label for="email" :value="__('Usuario')" />
-                    <x-text-input id="email" name="email" type="email" class="mt-1 block w-full" :value="old('email', auth()->user()->email)" required />
-                    <x-input-error :messages="$errors->get('email')" class="mt-2" />
-                </div>
-
-                <!-- Campo Número de teléfono -->
-                <div>
-                    <x-input-label for="telefono" :value="__('Número de teléfono')" />
-                    <x-text-input id="telefono" name="telefono" type="text" class="mt-1 block w-full" :value="old('telefono', auth()->user()->telefono ?? '')" />
-                    <x-input-error :messages="$errors->get('telefono')" class="mt-2" />
-                </div>
-
-                <!-- Botones -->
-                <div class="flex justify-between mt-6">
-                    <x-secondary-button type="button" onclick="window.history.back()">Descartar</x-secondary-button>
-                    <x-primary-button style="background-color: #ff66a3; border-color: #ff66a3;" onmouseover="this.style.backgroundColor='#e0558a'" onmouseout="this.style.backgroundColor='#ff66a3'">Guardar</x-primary-button>
-                </div>
-            </form>
+    @if(session('success'))
+        <div class="p-3 mb-4 text-green-700 bg-green-100 border border-green-300 rounded">
+            {{ session('success') }}
         </div>
-    </div>
-</x-app-layout>
+    @endif
+
+    <!-- Datos del usuario -->
+    <form action="{{ route('profile.update') }}" method="POST" class="space-y-6">
+        @csrf
+        @method('PUT')
+
+        <div>
+            <label class="block font-medium text-gray-700">Nombre</label>
+            <input type="text" name="name" value="{{ $user->name }}"
+                   class="w-full px-4 py-2 mt-1 border border-gray-300 rounded-lg">
+        </div>
+
+        <div>
+            <label class="block font-medium text-gray-700">Correo electrónico</label>
+            <input type="email" name="email" value="{{ $user->email }}"
+                   class="w-full px-4 py-2 mt-1 border border-gray-300 rounded-lg">
+        </div>
+
+        <div class="pt-4 border-t">
+            <h2 class="mb-3 text-lg font-semibold text-gray-800">Cambiar contraseña</h2>
+
+            <label class="block font-medium text-gray-700">Nueva contraseña</label>
+            <input type="password" name="password"
+                   class="w-full px-4 py-2 mt-1 border border-gray-300 rounded-lg">
+
+            <label class="block mt-4 font-medium text-gray-700">Confirmar nueva contraseña</label>
+            <input type="password" name="password_confirmation"
+                   class="w-full px-4 py-2 mt-1 border border-gray-300 rounded-lg">
+        </div>
+
+        <div class="flex justify-between pt-4">
+            <a href="{{ route('dashboard') }}" 
+               class="px-5 py-2 border border-gray-400 rounded-lg hover:bg-gray-100">
+                Cancelar
+            </a>
+
+            <button class="px-6 py-2 text-white bg-black rounded-lg hover:bg-gray-800">
+                Guardar cambios
+            </button>
+        </div>
+    </form>
+
+    <!-- Cerrar sesión -->
+    <form action="{{ route('logout') }}" method="POST" class="mt-8">
+        @csrf
+        <button class="px-6 py-2 text-white bg-red-600 rounded-lg hover:bg-red-700">
+            Cerrar sesión
+        </button>
+    </form>
+
+</div>
+@endsection
